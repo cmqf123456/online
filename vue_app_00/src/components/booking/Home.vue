@@ -12,7 +12,7 @@
           场馆介绍
         </mt-tab-container-item>
         <mt-tab-container-item id="booking">
-          在线订票
+          <booking></booking>
         </mt-tab-container-item>
         <mt-tab-container-item id="mine">
           我的订票信息
@@ -43,6 +43,8 @@
 <script>
   // 引入子组件TitleBar
   import TitleBar from "./common/TitleBar.vue"
+  // 引入子组件Booking
+  import Booking from "./common/Booking.vue"
   export default {
     data(){
       return {
@@ -55,6 +57,7 @@
     // 注册子组件TitleBar
     components:{
       "titlebar":TitleBar,
+      "booking":Booking,
     }
   }
 </script>
@@ -62,6 +65,7 @@
 <style scoped>
 .container{
   overflow:hidden;/*溢出隐藏*/
+  background-color:#f2f2f2;
 }
 .page-wrap{
  overflow:auto;/*溢出显示轮动条*/

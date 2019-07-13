@@ -19,24 +19,26 @@
             <li>周六</li>
             <li>周日</li>
           </ul>
-          <ul>
-            <li class="noBook">07/08</li>
-            <li>07/09</li>
-            <li class="active">07/10</li>
-            <li>07/11</li>
-            <li>07/12</li>
-            <li>07/13</li>
-            <li>07/14</li>
-          </ul>
-          <ul>
-            <li class="noBook">07/15</li>
-            <li>07/16</li>
-            <li>07/17</li>
-            <li>07/18</li>
-            <li>07/19</li>
-            <li>07/20</li>
-            <li>07/21</li>
-          </ul>
+          <div class="dlis">
+            <ul>
+              <li class="noBook" @click="getTic(0)"></li>
+              <li @click="getTic(1)"></li>
+              <li @click="getTic(2)"></li>
+              <li @click="getTic(3)"></li>
+              <li @click="getTic(4)"></li>
+              <li @click="getTic(5)"></li>
+              <li @click="getTic(6)"></li>
+            </ul>
+            <ul>
+              <li class="noBook" @click="getTic(7)"></li>
+              <li @click="getTic(8)"></li>
+              <li class="active" @click="getTic(9)"></li>
+              <li @click="getTic(10)"></li>
+              <li @click="getTic(11)"></li>
+              <li @click="getTic(12)"></li>
+              <li @click="getTic(13)"></li>
+            </ul>
+          </div>
         </div>
         <div class="bMsg"><span class="okBook">剩余986张</span></div>
         <div class="bMsg"><span class="noBook">闭馆</span></div>
@@ -70,11 +72,59 @@
   export default {
     data(){
       return {
-
+        active:{
+          border:"1px solid #26a2ff"
+          }
       }
     },//data结束
+    computed: {
+      lis(){
+        var uls=document.querySelector(".dlis");
+        // console.log(uls);
+        var lis=uls.querySelectorAll("ul li");
+        return lis;
+      }
+    },
     components:{
       "titlebar":TitleBar,
+    },
+    methods:{
+      getTic(i){
+        var d1=new Date();
+        d1=d1.getFullYear();
+        var bdate=d1+"/"+this.lis[i].innerHTML;
+        // 获取选定的购票日期  2019/07/13
+        // console.log(bdate,typeof(bdate));
+        console.log(this.lis[i].innerHTML);
+        // 发送axios请求获取选中当天已购买的票数
+
+
+        // 修改选中日期的样式
+      }
+    },
+    mounted(){
+      // 自动填写当天往后7天的时间
+      var d1=new Date();
+      var mon=d1.getMonth()+1;  //获得月份
+      if(mon<10){
+        mon="0"+mon;
+      }
+      var d=d1.getDate();       //获得天数
+      if(d<10){
+        d="0"+d;
+      }
+      var day1=d1.getDay();     //获得星期
+      // console.log(day1);
+      if(day1==0){
+        day1=7;
+      }
+      var t=d1.getHours();      //获得小时
+      // console.log(mon,d,t,day1);
+      for(var i=day1-1; i<=(day1+5); i++){
+        // console.log(i);
+        this.lis[i].innerHTML=mon+"/"+d;
+        d++;
+      }
     }
   }
 </script>
@@ -115,15 +165,18 @@
     line-height:50px;
     font-size:13px;
   }
-  .bDate ul:first-child li{
+  .bDate>ul li{
     background-color:#26a2ff;
     color:#fff;
     font-size:16px;
   }
-  .bDate ul li.active{
+  .bDate .dlis ul li{
+    background-color:#fff;
+  }
+  .active{
     border:1px solid #26a2ff;
   }
-  .bDate ul li.noBook{
+  .dlis ul li.noBook{
     color:#aaa;
   }
   .book div.bMsg{
@@ -134,9 +187,14 @@
   }
   .book div.bMsg .noBook{
     color:#f00;
+    background:url("../../../assets/close-circle.png") no-repeat 0 2px;
+    background-size:20px 20px;
+    padding-left:24px;
   }
   .book div.bMsg .okBook{
-    
+    background:url("../../../assets/check-circle.png") no-repeat 0 2px;
+    background-size:20px 20px;
+    padding-left:24px;
   }
   /* 文字说明栏 */
   .bIntro{

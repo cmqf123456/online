@@ -24,10 +24,10 @@ CREATE TABLE book_info(
   udate DATE,
   phone VARCHAR(16)
 );
-INSERT INTO book_info VALUES(null,'成人票','2019-7-14','18906142788');
-INSERT INTO book_info VALUES(null,'老人票','2019-7-15','18906142799');
-INSERT INTO book_info VALUES(null,'学生票','2019-7-15','18906142799');
-INSERT INTO book_info VALUES(null,'一大一小亲子票','2019-7-16','18906142777');
+INSERT INTO book_info VALUES(null,'成人票','2019/07/14','18906142788');
+INSERT INTO book_info VALUES(null,'老人票','2019/07/15','18906142799');
+INSERT INTO book_info VALUES(null,'学生票','2019/07/15','18906142799');
+INSERT INTO book_info VALUES(null,'一大一小亲子票','2019/07/16','18906142777');
 
 /*
 #为商品表添加一列
