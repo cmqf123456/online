@@ -1,30 +1,37 @@
-USE xz;
-CREATE TABLE xz_login(
-  id INT PRIMARY KEY AUTO_INCREMENT,
-  uname VARCHAR(50),
-  upwd  VARCHAR(32)
-);
-INSERT INTO xz_login VALUES(null,'tom',md5('123'));
+SET NAMES UTF8;
+DROP DATABASE IF EXISTS books;
+CREATE DATABASE books CHARSET=UTF8;
+USE books;
 
-INSERT INTO xz_login VALUES(null,'jerry',md5('123'));
+/*创建票务表book_name*/
+CREATE TABLE book_name(
+  bid SMALLINT PRIMARY KEY AUTO_INCREMENT,
+  bname VARCHAR(8),
+  bprice  DECIMAL(5,2)
+);
+INSERT INTO book_name VALUES(null,'成人票','45');
+INSERT INTO book_name VALUES(null,'学生','22');
+INSERT INTO book_name VALUES(null,'老年','37');
+INSERT INTO book_name VALUES(null,'一大一小亲子票','67');
+
+
+
+
+/*创建订单信息表book_info*/
+CREATE TABLE book_info(
+  uid INT PRIMARY KEY AUTO_INCREMENT,
+  ubook VARCHAR(8),
+  udate DATE,
+  phone VARCHAR(16)
+);
+INSERT INTO book_info VALUES(null,'成人票','2019-7-14','18906142788');
+INSERT INTO book_info VALUES(null,'老人票','2019-7-15','18906142799');
+INSERT INTO book_info VALUES(null,'学生票','2019-7-15','18906142799');
+INSERT INTO book_info VALUES(null,'一大一小亲子票','2019-7-16','18906142777');
+
+/*
 #为商品表添加一列
  ALTER TABLE xz_laptop ADD img_url VARCHAR(255);
 #每一个商品图片 
  UPDATE xz_laptop SET img_url = '01.jpg';
-
-#以下代码创建购物车表与添加测试数据
-USE xz;
-CREATE TABLE xz_cart(
-  id INT PRIMARY KEY AUTO_INCREMENT,
-  img_url VARCHAR(25),
-  price   DECIMAL(10,2),
-  title   VARCHAR(255),
-  count   INT,
-  uid     INT
-);
-INSERT INTO xz_cart VALUES(null,'011.jpg',100,'罗技鼠标',1,1);
-INSERT INTO xz_cart VALUES(null,'012.jpg',110,'内存条',1,1);
-INSERT INTO xz_cart VALUES(null,'011.jpg',101,'罗技鼠标3',1,1);
-INSERT INTO xz_cart VALUES(null,'011.jpg',102,'罗技鼠标4',1,1);
-
-
+*/
