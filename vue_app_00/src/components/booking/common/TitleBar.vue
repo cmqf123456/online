@@ -1,6 +1,6 @@
 <template>
   <div class="page-head">
-    <span>{{leftTitle}}</span>
+    <h4>{{leftTitle}}</h4>
     
   </div>
 </template>
@@ -26,10 +26,11 @@
     width:100%; /* 宽度是父元素100% */
     justify-content: center; /* 两端对齐 */
     align-items:center; /* y轴居中对齐 */
-    background:#eee; 
+    background:#ededed; 
     padding:0 7px;
+    box-sizing:border-box;
     height:40px;
-    color:#000;
+    color:#333;
     font-size:18px;
   }
 

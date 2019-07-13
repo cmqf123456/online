@@ -3,10 +3,9 @@
   <div class="container">
     <div class="page-wrap">
       <!--顶部标题栏-->
-      <!--3. 使用子组件TitleBar-->
-      <titlebar leftTitle="XX科技馆"></titlebar>
-      <!--防止顶部内溢出-->
-      <div style="margin-top:48px"></div>
+      <!--3. 使用子组件TitleBar
+      <titlebar leftTitle="XX科技馆"></titlebar>-->
+      
       <!--面板  1个父面板  4个子面板-->
       <mt-tab-container v-model="active">
         <mt-tab-container-item id="intro">
@@ -47,7 +46,7 @@
   export default {
     data(){
       return {
-        active:"message"
+        active:"intro"
       }
     },
     methods:{
