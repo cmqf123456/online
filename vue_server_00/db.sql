@@ -21,7 +21,7 @@ INSERT INTO book_name VALUES(null,'一大一小亲子票','67');
 CREATE TABLE book_info(
   uid INT PRIMARY KEY AUTO_INCREMENT,
   ubook VARCHAR(8),
-  udate DATE,
+  udate VARCHAR(16),
   phone VARCHAR(16)
 );
 INSERT INTO book_info VALUES(null,'成人票','2019/07/14','18906142788');

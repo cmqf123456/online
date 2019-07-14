@@ -32,7 +32,7 @@
             <ul>
               <li class="noBook" @click="getTic(7)"></li>
               <li @click="getTic(8)"></li>
-              <li class="active" @click="getTic(9)"></li>
+              <li @click="getTic(9)"></li>
               <li @click="getTic(10)"></li>
               <li @click="getTic(11)"></li>
               <li @click="getTic(12)"></li>
@@ -40,9 +40,8 @@
             </ul>
           </div>
         </div>
-        <div class="bMsg"><span class="okBook">剩余986张</span></div>
-        <div class="bMsg"><span class="noBook">闭馆</span></div>
-        <mt-button size="large" type="primary">下一步</mt-button>
+        <div class="bMsg" :class="showDivClass"><span class="okBook" :class="showClass1">剩余{{tics}}张</span><span class="notBook" :class="showClass2">闭馆</span></div>
+        <mt-button @click="next" size="large" type="primary" style="margin-top:20px;">下一步</mt-button>
       </div>
       <!--文字说明栏-->
       <div class="bIntro">
@@ -72,12 +71,24 @@
   export default {
     data(){
       return {
-        active:{
-          border:"1px solid #26a2ff"
-          }
+        // 剩余票数
+        tics:1000,
+        // 购票日期
+        gdate:"",
+        // 增减样式
+        showClass1:{
+          showMsg:false,
+        },
+        showClass2:{
+          showMsg:false,
+        },
+        showDivClass:{
+          showDiv:false,
+        }
       }
     },//data结束
     computed: {
+      // 获取li列表，保存在计算属性lis中
       lis(){
         var uls=document.querySelector(".dlis");
         // console.log(uls);
@@ -91,15 +102,51 @@
     methods:{
       getTic(i){
         var d1=new Date();
+        console.log(d1);
+        // 获取当天的星期
+        var day1=d1.getDay();
+        // 获取选定的购票日期 bdate:2019/07/13
         d1=d1.getFullYear();
-        var bdate=d1+"/"+this.lis[i].innerHTML;
-        // 获取选定的购票日期  2019/07/13
-        // console.log(bdate,typeof(bdate));
-        console.log(this.lis[i].innerHTML);
-        // 发送axios请求获取选中当天已购买的票数
-
+        var d2=d1+"/"+this.lis[i].innerHTML;
+        // 保存购票日期到sessionStorage对象中
+        sessionStorage.setItem("gdate",d2)
+        console.log(sessionStorage);
+        this.gdate=d2;
+        console.log(d2,typeof(d2));
+        // 点中显示信息div样式
+        this.showDivClass.showDiv=true;
+        // 根据i判断是否是周一 如果i%7==0为周一 ，则显示闭馆
+        if(i%7==0){
+          this.showClass2.showMsg=true;
+          this.showClass1.showMsg=false;
+        }else{
+          this.showClass2.showMsg=false;
+          // 发送axios请求获取选中当天已购买的票数
+          this.axios.get("booking",{
+            params:{
+              d2,
+            }
+          }).then(result=>{
+            console.log(11);
+            console.log(result);
+          })
+          // this.showClass1.showMsg=true;
+        }
+        
+        
 
         // 修改选中日期的样式
+        for(var j=0;j<14; j++){
+          this.lis[j].className="";
+          if(j==0||j==7){
+            this.lis[j].className="noBook";
+          }
+        }
+        this.lis[i].className="active";
+
+      },
+      next(){
+        this.$router.push('/BookCart')
       }
     },
     mounted(){
@@ -176,25 +223,34 @@
   .active{
     border:1px solid #26a2ff;
   }
-  .dlis ul li.noBook{
+  .noBook{
     color:#aaa;
   }
-  .book div.bMsg{
+  .bMsg{
     background-color:#fff;
     margin:5px 0;
     padding:10px 20px;
     font-size:16px;
+    display:none;
   }
-  .book div.bMsg .noBook{
+  .showDiv{
+    display:block;
+  }
+  .notBook{
     color:#f00;
     background:url("../../../assets/close-circle.png") no-repeat 0 2px;
     background-size:20px 20px;
     padding-left:24px;
+    display:none;
   }
-  .book div.bMsg .okBook{
+  .okBook{
     background:url("../../../assets/check-circle.png") no-repeat 0 2px;
     background-size:20px 20px;
     padding-left:24px;
+    display:none;
+  }
+  .showMsg{
+    display:block;
   }
   /* 文字说明栏 */
   .bIntro{

@@ -10,7 +10,7 @@ const session = require("express-session");
    user:"root",
    password:"",
    port:3306,
-   database:"xz",
+   database:"books",
    connectionLimit:15
  })
  //2.2:跨域
@@ -34,4 +34,17 @@ const session = require("express-session");
 
 
 // 接口
+server.get("/booking",(req,res)=>{
+  var d2=req.query.d2;
+  console.log(d2,typeof(d2));
+  // console.log(d2,typeof(d2));
+  var sql=`SELECT * FROM book_info WHERE udate IN (${d2})`;
+  pool.query(sql,(err,result)=>{
+    if(err) throw err;
+    // var gdate=result[0].udate;
+    // res.send(gdate);
+    console.log(result);
+    res.send(result);
+  });
+})
 

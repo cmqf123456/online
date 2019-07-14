@@ -10,7 +10,7 @@
         <p>返回修改</p>
       </div>
       <!--购票日期-->
-      <div class="cartDate">购票日期：<span>2019/07/14</span></div>
+      <div class="cartDate">购票日期：<span>{{gdate}}</span></div>
       <!--购物车主体-->
       <div class="cart">
         <ul>
@@ -54,10 +54,16 @@
   import TitleBar from "./TitleBar.vue"
   export default {
     data(){
-      return {}
+      return {
+        gdate:"",
+      }
     },//data结束
     components:{
       "titlebar":TitleBar
+    },
+    mounted(){
+      this.gdate=sessionStorage.getItem("gdate");
+      console.log(this.gdate);
     },
   }
 </script>
