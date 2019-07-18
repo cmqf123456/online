@@ -21,7 +21,7 @@
           </ul>
           <div class="dlis">
             <ul>
-              <li class="noBook" @click="getTic(0)"></li>
+              <li @click="getTic(0)"></li>
               <li @click="getTic(1)"></li>
               <li @click="getTic(2)"></li>
               <li @click="getTic(3)"></li>
@@ -29,8 +29,8 @@
               <li @click="getTic(5)"></li>
               <li @click="getTic(6)"></li>
             </ul>
-            <ul>
-              <li class="noBook" @click="getTic(7)"></li>
+            <ul v-show="day1>1">
+              <li @click="getTic(7)"></li>
               <li @click="getTic(8)"></li>
               <li @click="getTic(9)"></li>
               <li @click="getTic(10)"></li>
@@ -40,8 +40,12 @@
             </ul>
           </div>
         </div>
-        <div class="bMsg" :class="showDivClass"><span class="okBook" :class="showClass1">剩余{{tics}}张</span><span class="notBook" :class="showClass2">闭馆</span></div>
-        <mt-button @click="next" size="large" type="primary" style="margin-top:20px;">下一步</mt-button>
+        <div class="bMsg" :class="showDivClass">
+          <span class="okBook" :class="showClass1" v-text="tics"></span>
+          <span class="notBook" :class="showClass2">闭馆</span>
+          <span class="noBook" :class="showClass3">当日下午3点之后不可购票</span>
+        </div>
+        <mt-button @click="next" size="large" type="primary" style="margin-top:20px;" :disabled="btnAbl">下一步</mt-button>
       </div>
       <!--文字说明栏-->
       <div class="bIntro">
@@ -72,9 +76,11 @@
     data(){
       return {
         // 剩余票数
-        tics:1000,
+        tics:"可选购",
         // 购票日期
         gdate:"",
+        // 当天的星期
+        day1:0,
         // 增减样式
         showClass1:{
           showMsg:false,
@@ -82,9 +88,14 @@
         showClass2:{
           showMsg:false,
         },
+        showClass3:{
+          showMsg:false,
+        },
         showDivClass:{
           showDiv:false,
-        }
+        },
+        // 按钮样式
+        btnAbl:true
       }
     },//data结束
     computed: {
@@ -101,48 +112,80 @@
     },
     methods:{
       getTic(i){
+        // 初始化按钮可用\信息框的可见\选中框
+        
+        this.showDivClass.showDiv=false;
+        this.btnAbl=true;
+        for(var k=0;k<14; k++){
+          this.lis[k].className="";
+        }
+        
         var d1=new Date();
         console.log(d1);
+        // 获取当天小时
+        var hour1=d1.getHours();
+        // console.log(hour1);
         // 获取当天的星期
         var day1=d1.getDay();
-        // 获取选定的购票日期 bdate:2019/07/13
-        d1=d1.getFullYear();
-        var d2=d1+"/"+this.lis[i].innerHTML;
-        // 保存购票日期到sessionStorage对象中
-        sessionStorage.setItem("gdate",d2)
-        console.log(sessionStorage);
-        this.gdate=d2;
-        console.log(d2,typeof(d2));
-        // 点中显示信息div样式
-        this.showDivClass.showDiv=true;
-        // 根据i判断是否是周一 如果i%7==0为周一 ，则显示闭馆
-        if(i%7==0){
-          this.showClass2.showMsg=true;
-          this.showClass1.showMsg=false;
-        }else{
-          this.showClass2.showMsg=false;
-          // 发送axios请求获取选中当天已购买的票数
-          this.axios.get("booking",{
-            params:{
-              d2,
-            }
-          }).then(result=>{
-            console.log(11);
-            console.log(result);
-          })
-          // this.showClass1.showMsg=true;
+        if(day1==0){
+          day1=7;
         }
         
-        
-
-        // 修改选中日期的样式
-        for(var j=0;j<14; j++){
-          this.lis[j].className="";
-          if(j==0||j==7){
-            this.lis[j].className="noBook";
+        console.log(day1);
+        // 在当前日期+后6天内，能买票
+        if(i>=day1-1&i<=day1+5){
+          // 获取选定的购票日期 bdate:2019/07/13
+          d1=d1.getFullYear();
+          var d2=d1+"/"+this.lis[i].innerHTML;
+          // 保存购票日期到sessionStorage对象中
+          sessionStorage.setItem("gdate",d2);
+          console.log(sessionStorage);
+          this.gdate=d2;
+          console.log(d2,typeof(d2));
+          // 点中显示信息div样式
+          this.showDivClass.showDiv=true;
+          // 根据i判断是否是周一 如果i%7==0为周一 ，则显示闭馆
+          if(i%7==0){
+            this.showClass2.showMsg=true;
+            this.showClass1.showMsg=false;
+            this.showClass3.showMsg=false;
+          }else if(i==day1-1&hour1>=13){
+            this.showClass3.showMsg=true;
+            this.showClass1.showMsg=false;
+            this.showClass2.showMsg=false;
+          }
+          else{
+            this.showClass2.showMsg=false;
+            this.showClass3.showMsg=false;
+            // 发送axios请求获取选中当天已购买的票数
+            // this.axios.get("booking",{
+            //   params:{
+            //     d2,
+            //   }
+            // }).then(result=>{
+            //   console.log(11);
+            //   console.log(result);
+            // })
+            this.showClass1.showMsg=true;
+            
+          }
+          // 修改选中日期的样式
+          for(var j=0;j<14; j++){
+            this.lis[j].className="";
+            // 如果是周一
+            // if(j==0||j==7){
+            //   this.lis[j].className="noBook";
+            // }
+          }
+          this.lis[i].className="active";
+          this.btnAbl=false;
+          // 如果是周一
+          if(i==0||i==7){
+            this.btnAbl=true;
+          }else if(i==day1-1&hour1>=15){
+            this.btnAbl=true;
           }
         }
-        this.lis[i].className="active";
 
       },
       next(){
@@ -165,6 +208,7 @@
       if(day1==0){
         day1=7;
       }
+      this.day1=day1;
       var t=d1.getHours();      //获得小时
       // console.log(mon,d,t,day1);
       for(var i=day1-1; i<=(day1+5); i++){
@@ -172,6 +216,18 @@
         this.lis[i].innerHTML=mon+"/"+d;
         d++;
       }
+    },
+    created(){
+      sessionStorage.removeItem("gdate");
+      if(!sessionStorage.getItem("uname")){
+        this.$messagebox("请先登录")
+          .then(action=>{
+            this.$router.push("/Login");
+          })
+          .catch(err=>{console.log(err)}
+        );
+      }
+      console.log(sessionStorage);
     }
   }
 </script>
@@ -223,9 +279,11 @@
   .active{
     border:1px solid #26a2ff;
   }
+  /*
   .noBook{
     color:#aaa;
   }
+  */
   .bMsg{
     background-color:#fff;
     margin:5px 0;
@@ -245,6 +303,13 @@
   }
   .okBook{
     background:url("../../../assets/check-circle.png") no-repeat 0 2px;
+    background-size:20px 20px;
+    padding-left:24px;
+    display:none;
+  }
+  .noBook{
+    color:#f00;
+    background:url("../../../assets/close-circle.png") no-repeat 0 2px;
     background-size:20px 20px;
     padding-left:24px;
     display:none;

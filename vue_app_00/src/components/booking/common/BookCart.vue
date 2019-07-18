@@ -42,7 +42,7 @@
       <!--结算按钮和信息-->
       <div class="cartBtm">
         <p>合计：¥<span>45.00</span></p>
-        <p><span href="javascript:;">立即支付</span></p>
+        <p><span>立即支付</span></p>
       </div>
     </div>
     <!--底部箭头栏-->
@@ -65,6 +65,7 @@
       this.gdate=sessionStorage.getItem("gdate");
       console.log(this.gdate);
     },
+    methods:{}
   }
 </script>
 

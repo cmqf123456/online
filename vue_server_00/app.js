@@ -34,12 +34,45 @@ const session = require("express-session");
 
 
 // 接口
-server.get("/booking",(req,res)=>{
-  var d2=req.query.d2;
-  console.log(d2,typeof(d2));
-  // console.log(d2,typeof(d2));
-  var sql=`SELECT * FROM book_info WHERE udate IN (${d2})`;
+// 1. 注册接口
+
+
+// 2. 登录接口
+server.get("/login",(req,res)=>{
+  var uname=req.query.uname;
+  var upwd=req.query.upwd;
+  console.log(uname,upwd);
+  // console.log(uname,upwd);
+  var sql="SELECT * FROM user WHERE uname=? AND upwd = ?";
+  pool.query(sql,[uname,upwd],(err,result)=>{
+    if(err) throw err;
+    if(result.length==0){
+      res.send({code:-1,msg:"用户名或密码错误"});
+    }else{
+      // 获取当前用户登录的id
+      req.session.uid=result[0].id;
+      res.send({code:1,msg:"登录成功"});
+    }
+  });
+})
+
+// 3. 获取票种信息
+server.get("/tics",(req,res)=>{
+  var sql="SELECT * FROM tickets";
   pool.query(sql,(err,result)=>{
+    if(err) throw err;
+    console.log(result);
+    res.send(result);
+  });
+})
+
+
+// 4. 获取登录用户的订单信息 接口info
+server.get("/info",(req,res)=>{
+  var id=req.query.uid;
+  // var p="18906142799";
+  var sql="SELECT * FROM book_info WHERE b_id=?";
+  pool.query(sql,id,(err,result)=>{
     if(err) throw err;
     // var gdate=result[0].udate;
     // res.send(gdate);
