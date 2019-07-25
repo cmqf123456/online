@@ -53,12 +53,11 @@
           if(result.data.code==1){
             // console.log(uname);
             sessionStorage.setItem("uname",uname);
-            // console.log(sessionStorage)
+            sessionStorage.setItem("uid",result.data.uid);
+            console.log(sessionStorage)
             this.$router.push('/Booking');
           }else{
-            
             this.$messagebox("",result.data.msg);
-            
           }
           
         })

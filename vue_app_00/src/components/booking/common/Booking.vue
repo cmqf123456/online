@@ -121,7 +121,7 @@
         }
         
         var d1=new Date();
-        console.log(d1);
+        // console.log(d1);
         // 获取当天小时
         var hour1=d1.getHours();
         // console.log(hour1);
@@ -131,7 +131,7 @@
           day1=7;
         }
         
-        console.log(day1);
+        // console.log(day1);
         // 在当前日期+后6天内，能买票
         if(i>=day1-1&i<=day1+5){
           // 获取选定的购票日期 bdate:2019/07/13
@@ -141,7 +141,7 @@
           sessionStorage.setItem("gdate",d2);
           console.log(sessionStorage);
           this.gdate=d2;
-          console.log(d2,typeof(d2));
+          // console.log(d2,typeof(d2));
           // 点中显示信息div样式
           this.showDivClass.showDiv=true;
           // 根据i判断是否是周一 如果i%7==0为周一 ，则显示闭馆
@@ -189,7 +189,7 @@
 
       },
       next(){
-        this.$router.push('/BookCart')
+        this.$router.push('/BookTics')
       }
     },
     mounted(){

@@ -22,8 +22,8 @@ CREATE TABLE tickets(
   tprice  DECIMAL(5,2)
 );
 INSERT INTO tickets VALUES(null,'成人票','45');
-INSERT INTO tickets VALUES(null,'学生','22');
-INSERT INTO tickets VALUES(null,'老年','37');
+INSERT INTO tickets VALUES(null,'学生票','22');
+INSERT INTO tickets VALUES(null,'老年票','37');
 INSERT INTO tickets VALUES(null,'一大一小亲子票','67');
 
 
@@ -32,20 +32,50 @@ INSERT INTO tickets VALUES(null,'一大一小亲子票','67');
 CREATE TABLE book_info(
   bid INT PRIMARY KEY AUTO_INCREMENT,
   book VARCHAR(8),
+  bcard VARCHAR(18),
+  bprice DECIMAL(5,2),
   bstatus TINYINT(1),
   bdate VARCHAR(16),
+  addtime DATETIME DEFAULT now(),
   b_id VARCHAR(16)
 );
-INSERT INTO book_info VALUES(null,'成人票',0,'2019/07/14','1');
-INSERT INTO book_info VALUES(null,'老人票',1,'2019/07/17','2');
-INSERT INTO book_info VALUES(null,'学生票',2,'2019/07/17','2');
-INSERT INTO book_info VALUES(null,'一大一小亲子票',1,'2019/07/16','3');
+INSERT INTO book_info VALUES(null,'成人票','320481196504260428','45',0,'2019/07/14','2019-07-24 20:00','1');
+INSERT INTO book_info VALUES(null,'老人票','320481196504260278','37',1,'2019/07/17','2019-07-24 20:00','2');
+INSERT INTO book_info VALUES(null,'学生票','320481196504262148','22',1,'2019/07/17','2019-07-24 20:00','2');
+INSERT INTO book_info VALUES(null,'一大一小亲子票','320481196504260333','67',1,'2019/07/16','2019-07-24 20:00','3');
+
+
+/*清除未付款的超过15分钟的订单*/
+# 把SQL语句的结束符，从默认的“;”改为“#”
+delimiter #
+
+# 创建存储过程 clear_order()
+# 删除900秒之前添加的记录
+create procedure clear_order()
+begin
+  delete from book_info where now()-addtime>900;
+end#
+
+# 把SQL语句的结束符，改回默认的“;”
+delimiter ;
+
+# 查询数据库books里的存储过程
+select * from mysql.proc where db="books";
+
+# 列数较多，显示很乱
+# 可以把“;”改为“/G”
+# 以列表形式显示结果
+select * from mysql.proc where db="books"\G
+
+# 查看“事件调度器”的状态
+show variables like "%event_scheduler%";
+
 
 
 
 /*
 #为商品表添加一列
  ALTER TABLE xz_laptop ADD img_url VARCHAR(255);
-#每一个商品图片 
+#修改每一个商品图片 
  UPDATE xz_laptop SET img_url = '01.jpg';
 */

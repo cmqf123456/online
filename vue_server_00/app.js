@@ -41,7 +41,7 @@ const session = require("express-session");
 server.get("/login",(req,res)=>{
   var uname=req.query.uname;
   var upwd=req.query.upwd;
-  console.log(uname,upwd);
+  // console.log(uname,upwd);
   // console.log(uname,upwd);
   var sql="SELECT * FROM user WHERE uname=? AND upwd = ?";
   pool.query(sql,[uname,upwd],(err,result)=>{
@@ -49,9 +49,10 @@ server.get("/login",(req,res)=>{
     if(result.length==0){
       res.send({code:-1,msg:"用户名或密码错误"});
     }else{
+      console.log(result);
       // 获取当前用户登录的id
-      req.session.uid=result[0].id;
-      res.send({code:1,msg:"登录成功"});
+      req.session.uid=result[0].uid;
+      res.send({code:1,msg:"登录成功",uid:result[0].uid});
     }
   });
 })
@@ -69,8 +70,8 @@ server.get("/tics",(req,res)=>{
 
 // 4. 获取登录用户的订单信息 接口info
 server.get("/info",(req,res)=>{
-  var id=req.query.uid;
-  // var p="18906142799";
+  var id=req.session.uid;
+  console.log(id);
   var sql="SELECT * FROM book_info WHERE b_id=?";
   pool.query(sql,id,(err,result)=>{
     if(err) throw err;
@@ -80,4 +81,32 @@ server.get("/info",(req,res)=>{
     res.send(result);
   });
 })
+
+
+// 插入购票信息 接口 cart
+server.get("/cart",(req,res)=>{
+  // var obj={
+  //   book:"成人票",
+  //   bcard:"320481196504271548",
+  //   bprice:"45",
+  //   bstatus:0,
+  //   bdate:"2019/07/23",
+  //   b_id:"2"
+  // };
+  // console.log(req.query);
+  var obj=req.query;
+  console.log(obj);
+  var sql="INSERT INTO book_info SET ? ";
+  pool.query(sql,obj,(err,result)=>{
+    if(err) throw err;
+    console.log(result);
+    if(result.affectedRows==1){
+      res.send({code:1,msg:"插入成功"});
+    }else{
+      res.send({code:-1,msg:"插入失败"});
+    }
+    
+  })
+})
+
 

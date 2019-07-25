@@ -8,6 +8,7 @@ import Orderlist from "./components/booking/common/Orderlist.vue"
 // 引入booking面板相关组件
 import Booking from "./components/booking/common/Booking.vue"
 import BookCart from "./components/booking/common/BookCart.vue"
+import BookTics from "./components/booking/common/BookTics.vue"
 import Login from "./components/booking/common/Login.vue"
 import Reg from "./components/booking/common/Reg.vue"
 
@@ -20,6 +21,7 @@ export default new Router({
     {path:'/Orderlist',component:Orderlist},
     {path:'/Booking',component:Booking},
     {path:'/BookCart',component:BookCart},
+    {path:'/BookTics',component:BookTics},
     {path:'/Login',component:Login},
     {path:'/Reg',component:Reg},
   ]
