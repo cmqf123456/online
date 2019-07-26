@@ -4,7 +4,7 @@
         <titlebar leftTitle="订单查询"></titlebar>
         <div class="c2">
             <div v-show="uname.length>0" class="d1">
-                <span>欢迎回来：{{uname}}</span> 
+                <span>欢迎：{{uname}}</span> 
                 <span @click="toHome">返回首页</span>
             </div>
             <div class="d2" v-if="num==1" @click="toLogin">请先登录</div>

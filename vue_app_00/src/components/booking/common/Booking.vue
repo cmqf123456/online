@@ -199,14 +199,15 @@
     // 自动填写当天往后7天的时间
     mounted(){
       var d1=new Date();
+      var year=d1.getFullYear();
       var mon=d1.getMonth()+1;  //获得月份
-      if(mon<10){
-        mon="0"+mon;
-      }
+      // if(mon<10){
+      //   mon="0"+mon;
+      // }
       var d=d1.getDate();       //获得天数
-      if(d<10){
-        d="0"+d;
-      }
+      // if(d<10){
+      //   d="0"+d;
+      // }
       var day1=d1.getDay();     //获得星期
       // console.log(day1);
       if(day1==0){
@@ -219,6 +220,53 @@
         // console.log(i);
         this.lis[i].innerHTML=mon+"/"+d;
         d++;
+        // 如果d超过当月的最大天数，则d初始化为1，mon也做相应操作
+        // 根据是否为闰年，判定2月份的最大天数
+        switch(mon){
+          case 1:
+          case 3:
+          case 5:
+          case 7:
+          case 8:
+          case 10:
+          case 12:
+            if(d>31){
+              d=1;
+              mon++;
+              if(mon>12){
+                mon=1;
+              }
+            }
+            break;
+          case 4:
+          case 6:
+          case 9:
+          case 11:
+            if(d>31){
+              d=1;
+              mon++;
+            }
+            break;
+          case 2:
+            if(year%4==0&&year%100!=0||year%400==0){
+              if(d>29){
+                d=1;
+              }
+            }else{
+              if(d>28){
+                d=1;
+              }
+            }
+        }
+        
+        // if(d==32){
+        //   d=1;
+        //   mon++;
+        //   if(mon==13){
+        //     mon=1;
+        //   }
+        // }
+        
       }
     },
     created(){
