@@ -9,13 +9,13 @@
       <!--面板  1个父面板  4个子面板-->
       <mt-tab-container v-model="active">
         <mt-tab-container-item id="intro">
-          场馆介绍
+          <intro></intro>
         </mt-tab-container-item>
         <mt-tab-container-item id="booking">
           <booking></booking>
         </mt-tab-container-item>
         <mt-tab-container-item id="mine">
-          我的订票信息
+          <orderlist></orderlist>
         </mt-tab-container-item>
       </mt-tab-container>
       <!--底部导航条-->
@@ -45,6 +45,8 @@
   import TitleBar from "./common/TitleBar.vue"
   // 引入子组件Booking
   import Booking from "./common/Booking.vue"
+  import Intro from "./common/Intro.vue"
+  import Orderlist from "./common/Orderlist.vue"
   export default {
     data(){
       return {
@@ -58,6 +60,8 @@
     components:{
       "titlebar":TitleBar,
       "booking":Booking,
+      "intro":Intro,
+      "orderlist":Orderlist
     }
   }
 </script>

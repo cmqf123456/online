@@ -33,6 +33,10 @@
       <p>合计：<span>{{ticCount}}</span>张</p>
       <p><span @click="next">提交订单</span></p>
     </div>
+
+    <!--底部箭头栏-->
+    <bottombar left="/Booking" :right="jumpRight"></bottombar>
+    
     
   </div>
 </template>
@@ -40,6 +44,8 @@
 <script>
   // 引入相关子组件
   import TitleBar from "./TitleBar.vue";
+  import Bottom from "./Bottom.vue";
+
   export default {
     data(){
       return {
@@ -69,7 +75,10 @@
           {c:[]},
           {c:[]},
         ],
-        cardMsg:0
+        // 控制身份证错误提示信息显示
+        cardMsg:0,
+        // 判断向右跳转路径地址
+        jumpRight:""
       }//return结束
     },//data结束
     // 计算属性
@@ -92,7 +101,8 @@
       }
     },
     components:{
-      "titlebar":TitleBar
+      "titlebar":TitleBar,
+      "bottombar":Bottom,
     },
     methods:{
       // 增加按钮单击事件
@@ -121,10 +131,23 @@
       // 提交订单按钮
       next(){
         var cardDiv=document.getElementById("cards");
-        var elems=cardDiv.getElementsByClassName("cardRed")
+        var elems=cardDiv.getElementsByClassName("cardRed");
         console.log(elems);
-        // 如果没有身份证框有cardRed样式，则执行提交订单操作
-        if(elems.length==0){
+        // 判断有无空身份证号 设置变量num接收有几个空的身份证
+        var num=0;
+        for(var i=0; i<this.cards.length; i++){
+          // console.log(this.cards.length);
+          for(var j=0; j<this.cards[i].c.length; j++){
+            // console.log(this.cards[i].c.length);
+            // console.log(this.cards[i].c[j].num);
+            if(this.cards[i].c[j].num==""){
+              num++;
+            }
+          }
+        }
+        // console.log(num);
+        // 如果没有身份证框有cardRed样式，并且num=0,则执行提交订单操作
+        if(elems.length==0&&num==0){
           // 将购物车信息保存在sessionStorage中
         var cart=[];
         for(var i=0; i<this.ticList.length; i++){
@@ -201,14 +224,44 @@
       
     },
     created(){
-      // 获得购票日期
+      // 功能1：页面运行到订单第二个页面
+      sessionStorage.setItem("pageNo2",2);
+      // 功能2：判定用户是否已登录，如果没有，跳转到登录页面
+      if(!sessionStorage.getItem("uname")){
+        // 将当前的路由地址保存在sessionStorage中，登录后可跳回此页面
+        sessionStorage.setItem("jumpRouter","/BookTics");
+        this.$messagebox("请先登录")
+          .then(action=>{
+            this.$router.push("/Login");
+          })
+          .catch(err=>{console.log(err)}
+        );
+      }
+      // 功能3：获得购票日期
       this.gdate=sessionStorage.getItem("gdate");
-      // 获得票种列表
+      // 功能4：发送请求，获得票种列表
       this.axios.get("tics",{params:{}})
       .then(res=>{
         this.ticList=res.data;
         // console.log(this.ticList);
       });
+      // 功能5：判断程序是否运行过第三个订单页面，是，则向右箭头加路径
+      var num=sessionStorage.getItem("pageNo3");
+      if(num==3){
+        this.jumpRight="/BookCart";
+      };
+      /*
+      // 功能6：页面跳转回此页面后恢复选择后的信息
+      var obj=JSON.parse(sessionStorage.cart);
+      for(var i=0;i<obj.length; i++){
+        console.log(obj[i][0]);
+        this.tics[i].t=obj[i].length;
+        // 获取购票数
+        console.log(this.tics[i].t,typeof(this.tics[i].t));
+        // 获取身份证号
+      }
+      */
+      
     }
   }
 </script>
@@ -300,7 +353,7 @@
   /* 结算按钮和信息 */
   .cartBtm{
     position:fixed;
-    bottom:0;
+    bottom:37px;
     width:100%;
     display:flex;
     text-align:center;
@@ -314,6 +367,7 @@
   .cartBtm p:first-child{
     width:50%;
     color:#e6a062;
+    background:#fff;
   }
   .cartBtm p+p{
     background-color:#e6a062;

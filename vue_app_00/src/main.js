@@ -57,3 +57,6 @@ new Vue({
   render: h => h(App),
   store  // 6.4 将store保存vue实例中
 }).$mount('#app')  // index.html中的id为app的div
+
+
+var bus=new Vue();

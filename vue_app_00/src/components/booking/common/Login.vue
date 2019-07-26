@@ -23,10 +23,12 @@
     data(){
       return {
         uname:'',
-        upwd:''
+        upwd:'',
+        jumpRouter:""
       }
     },//data结束
     methods:{
+      // 登录按钮事件
       login(){
         // 获取用户名和密码
         var uname=this.uname;
@@ -54,18 +56,22 @@
             // console.log(uname);
             sessionStorage.setItem("uname",uname);
             sessionStorage.setItem("uid",result.data.uid);
-            console.log(sessionStorage)
-            this.$router.push('/Booking');
+            console.log(sessionStorage);
+            var jumpRouter=sessionStorage.getItem("jumpRouter");
+            console.log(jumpRouter);
+            this.$router.push(jumpRouter);
           }else{
             this.$messagebox("",result.data.msg);
           }
           
         })
       },
+      // 跳转到注册按钮
       toReg(){
         this.$router.push("/Reg");
       },
     },
+    // 定义子组件
     components:{
       "titlebar":TitleBar
     },

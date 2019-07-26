@@ -33,8 +33,37 @@ const session = require("express-session");
  server.listen(3000);
 
 
-// 接口
 // 1. 注册接口
+server.get("/reg",(req,res)=>{
+  var uname=req.query.uname;
+  var upwd=req.query.upwd;
+  var uphone=req.query.uphone;
+  var sql="SELECT * FROM user WHERE uname=?  OR uphone=?";
+  pool.query(sql,[uname,uphone],function(err,result){
+    if(err) throw err;
+    if(result.length==0){
+        var tsql="INSERT INTO user VALUES(?,?,?,?)";
+        pool.query(tsql,[null,uname,upwd,uphone],(err,result)=>{
+       if(err) throw err;
+       if(result.affectedRows>0){
+         console.log(result);
+           res.send({code:1,msg:"注册成功"});
+           }
+       })
+       return;
+    }else{
+      if(result[0].uphone==uphone){
+        res.send({code:-2,msg:"手机号已被绑定"});
+        return;
+      }
+      else{
+        res.send({code:-1,msg:"用户名已被占用"});
+        return;
+      }
+    }
+    
+  })
+})
 
 
 // 2. 登录接口
@@ -49,7 +78,7 @@ server.get("/login",(req,res)=>{
     if(result.length==0){
       res.send({code:-1,msg:"用户名或密码错误"});
     }else{
-      console.log(result);
+      // console.log(result);
       // 获取当前用户登录的id
       req.session.uid=result[0].uid;
       res.send({code:1,msg:"登录成功",uid:result[0].uid});
@@ -83,7 +112,7 @@ server.get("/info",(req,res)=>{
 })
 
 
-// 插入购票信息 接口 cart
+// 5. 插入购票信息 接口 cart
 server.get("/cart",(req,res)=>{
   // var obj={
   //   book:"成人票",

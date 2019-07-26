@@ -64,14 +64,15 @@
         </div>
       </div>
     </div>
-    <!--底部箭头栏-->
-    <div></div>
+    <!--底部箭头栏
+    <bottombar right="/BookTics" left=""></bottombar>-->
   </div>
 </template>
 
 <script>
   // 引入相关子组件
   import TitleBar from "./TitleBar.vue";
+  import Bottom from "./Bottom.vue"
   export default {
     data(){
       return {
@@ -109,8 +110,10 @@
     },
     components:{
       "titlebar":TitleBar,
+      "bottombar":Bottom,
     },
     methods:{
+      
       getTic(i){
         // 初始化按钮可用\信息框的可见\选中框
         
@@ -188,12 +191,13 @@
         }
 
       },
+      // 下一步按钮事件
       next(){
         this.$router.push('/BookTics')
       }
     },
+    // 自动填写当天往后7天的时间
     mounted(){
-      // 自动填写当天往后7天的时间
       var d1=new Date();
       var mon=d1.getMonth()+1;  //获得月份
       if(mon<10){
@@ -218,7 +222,11 @@
       }
     },
     created(){
+      // 清除sessionStorage中已选定的购票日期
       sessionStorage.removeItem("gdate");
+      // 页面执行到哪一个页面，用状态码记录
+      sessionStorage.setItem("pageNo1",1);
+      /*
       if(!sessionStorage.getItem("uname")){
         this.$messagebox("请先登录")
           .then(action=>{
@@ -228,6 +236,7 @@
         );
       }
       console.log(sessionStorage);
+      */
     }
   }
 </script>

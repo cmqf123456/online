@@ -7,7 +7,6 @@
       <!--头部-->
       <div class="cartTop">
         <p>订单结算</p>
-        <p>返回修改</p>
       </div>
       <!--购票日期-->
       <div class="cartDate">购票日期：<span>{{gdate}}</span></div>
@@ -51,12 +50,14 @@
       </div>
     </div>
     <!--底部箭头栏-->
-    <div></div>
+    <bottombar left="/BookTics"></bottombar>
   </div>
 </template>
 
 <script>
-  import TitleBar from "./TitleBar.vue"
+  import TitleBar from "./TitleBar.vue";
+  import Bottom from "./Bottom.vue";
+
   export default {
     data(){
       return {
@@ -66,9 +67,12 @@
       }
     },//data结束
     components:{
-      "titlebar":TitleBar
+      "titlebar":TitleBar,
+      "bottombar":Bottom,
     },
     created(){
+      // 页面运行到订单第三个页面
+      sessionStorage.setItem("pageNo3",3);
       this.gdate=sessionStorage.getItem("gdate");
       // 获取购物车字符串
       var str=sessionStorage.getItem("cart");
@@ -118,6 +122,10 @@
             
           }
         })
+      },
+      jumpLeft(){
+        console.log(22);
+        // sessionStorage.getItem("jumpLeft","/BookTics");
       }
     },
     // 计算属性
@@ -226,7 +234,7 @@
   /* 结算按钮和信息 */
   .cartBtm{
     position:fixed;
-    bottom:0;
+    bottom:37px;
     width:100%;
     display:flex;
     text-align:center;
@@ -240,6 +248,7 @@
   .cartBtm p:first-child{
     width:50%;
     color:#e6a062;
+    background:#fff;
   }
   .cartBtm p+p{
     background-color:#e6a062;
