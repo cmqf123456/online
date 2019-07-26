@@ -10,6 +10,7 @@
             <div class="d2" v-if="num==1" @click="toLogin">请先登录</div>
             <div class="d3" v-else-if="num==2">暂无数据</div>
             <div class="d4" v-else="num==3">
+                <p class="p1">未付款订单请在15分钟内支付哦~</p>
                 <div id="content" v-for="(item,i) of list" :key="i">
                     <h4>购票种类:{{item.book}}</h4>
                     <p>购票日期：{{item.bdate}}</p>
@@ -22,6 +23,7 @@
                         <button @click="openConfirm(item.bstatus)" >{{item.bstatus > 0 ? "申请退款" : "立即支付"}}</button>
                     </div>
                 </div>
+                
             </div>
         </div>
         
@@ -139,6 +141,16 @@ export default {
         padding-bottom:30px;
     }
     
+    .p1{
+        margin-left:0;
+        padding:10px;
+        background:#f2f2f2;
+        text-align:center;
+        border:2px solid #ccc;
+        color:#777;
+        border-left:0;
+        border-right:0;
+    }
     
     #content{
         margin:15px;
